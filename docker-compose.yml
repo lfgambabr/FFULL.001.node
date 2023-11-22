@@ -1,0 +1,43 @@
+version: "3.8"
+services:
+    app:
+        container_name: app
+        build:
+            context: ./app
+        ports:
+            - "5000:5000"
+        networks:
+            - ffullnet
+        depends_on:
+            - db
+    web:
+        container_name: web
+        restart: always
+        build:
+            context: ./nginx
+        ports:
+            - "80:80"
+        networks:
+            - ffullnet
+        depends_on:
+            - app
+    db:
+        container_name: db
+        image: mysql:8.0.30-debian
+        restart: always
+        ports:
+            - 3306:3306
+        environment:
+            - MYSQL_ROOT_PASSWORD=root123
+            - MYSQL_DATABASE=ffull
+        volumes:
+            - ./db:/var/lib/mysql
+            - .docker/migration1.sql:/docker-entrypoint-initdb.d/1.sql
+            - .docker/migration2.sql:/docker-entrypoint-initdb.d/2.sql
+            - .docker/migration3.sql:/docker-entrypoint-initdb.d/3.sql
+        networks:
+            - ffullnet
+networks:
+  ffullnet:
+    name: ffullnet
+    driver: bridge

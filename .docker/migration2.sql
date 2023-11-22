@@ -1,0 +1,4 @@
+CREATE USER 'ffull'@'%' IDENTIFIED BY 'fullcycle';
+GRANT ALL PRIVILEGES ON ffull.* TO 'ffull'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+
